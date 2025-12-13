@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-
 from .models import Comments,Blogs
 
 
@@ -42,5 +41,6 @@ class BlogsDetailSerilizer(serializers.ModelSerializer):
         model=Blogs
         fields='__all__'
         read_only_fields = ['id', 'created_at', 'updated_at']
+
 
 

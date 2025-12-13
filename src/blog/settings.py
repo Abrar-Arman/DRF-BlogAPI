@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'api',
     'blog',
     'rest_framework',
+    'adrf'
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,7 @@ DATABASES = {
         'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
         'HOST':  'localhost',
         'PORT': '5432',
+        'CONN_MAX_AGE': 0,
         
     }
 }
@@ -128,3 +130,4 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT=BASE_DIR/'media'
+
