@@ -1,46 +1,49 @@
+from adrf.serializers import ModelSerializer as AsyncModelSerializer
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Comments,Blogs
+from .models import Comments, Blogs
 
 
-class UserSerilizer(serializers.ModelSerializer):
+class UserSerilizer(AsyncModelSerializer):
     class Meta:
-        model=User
-        fields=['id','username']
+        model = User
+        fields = ['username']
 
-class CommentsSerilizer(serializers.ModelSerializer):
-   
-   class Meta:
-        model=Comments
-        fields='__all__'
-        read_only_fields = ['id','created_at', 'updated_at']
-
-class CommentUpdateSerilizer(serializers.ModelSerializer):
+class CommentsSerilizer(AsyncModelSerializer):
     class Meta:
-          model=Comments
-          fields='__all__'
-          read_only_fields = ['id','created_at', 'updated_at','author','blog']
+        model = Comments
+        fields = '__all__'
+        read_only_fields = ['id', 'created_at', 'updated_at']
 
-class BlogsSerilizer(serializers.ModelSerializer):
+
+class CommentUpdateSerilizer(AsyncModelSerializer):
+    class Meta:
+        model = Comments
+        fields = '__all__'
+        read_only_fields = ['id', 'created_at', 'updated_at', 'author', 'blog']
+
+
+class BlogsSerilizer(AsyncModelSerializer):
     author = UserSerilizer(read_only=True)
     author_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
         write_only=True,
         source='author' 
     )
+    
     class Meta:
-        model=Blogs
-        fields='__all__'
+        model = Blogs
+        fields = '__all__'
         read_only_fields = ['id', 'created_at', 'updated_at']
 
-class BlogsDetailSerilizer(serializers.ModelSerializer):
-    comments=CommentsSerilizer(many=True, read_only=True)
+
+class BlogsDetailSerilizer(AsyncModelSerializer):
+    comments = CommentsSerilizer(many=True, read_only=True)
     author = UserSerilizer(read_only=True)
 
     class Meta:
-        model=Blogs
-        fields='__all__'
+        model = Blogs
+        fields = '__all__'
         read_only_fields = ['id', 'created_at', 'updated_at']
-
 
 

@@ -2,9 +2,9 @@
 # imports
 # -----------------------------
 from adrf.generics import (
-    ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
-    CreateAPIView,
+    ListAPIView,
+    CreateAPIView
 )
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Blogs, Comments
@@ -15,14 +15,18 @@ from .serilizers import (
     CommentUpdateSerilizer,
 )
 from .pagination import BlogListPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.authentication import TokenAuthentication
 from .commen.base_views import BaseCreateView
+from .permissions import IsOwnerOrReadOnlyPermission
 
 
-class BlogListCreate(ListCreateAPIView, BaseCreateView):
+class BlogListCreate(BaseCreateView,ListAPIView,CreateAPIView):
     queryset = Blogs.objects.all()
     serializer_class = BlogsSerilizer
     pagination_class = BlogListPagination
     parser_classes = (MultiPartParser, FormParser)
+    permission_classes=(IsAuthenticatedOrReadOnly,)
     msg = "Blog added successfully"
     
 
@@ -31,9 +35,10 @@ class BlogRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Blogs.objects.all()
     serializer_class = BlogsDetailSerilizer
     lookup_field = "pk"
+    permission_classes=[IsOwnerOrReadOnlyPermission]
 
 
-class CommentsCreate(CreateAPIView, BaseCreateView):
+class CommentsCreate(BaseCreateView,ListAPIView):
     queryset = Comments.objects.all()
     serializer_class = CommentsSerilizer
     msg = "Comment added successfully"
